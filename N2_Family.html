@@ -1282,34 +1282,35 @@
         </div>
 </section>
  
-    <!-- <div id="saved-sections"></div>                       -->
+<!-- <div id="saved-sections"></div>                       -->
+//save multiple section in local storage by using JSON.parse() and JSON.stringify()
+<div id= saved-sections></div>
 <script>
-    const savedSectionsDiv = document.getElementById('saved-sections');
-    const storageKeyPrefix = 'savedSection-';
-    
-    //Loop through the sections
-    const sections = document.querySelectorAll('section');
-    sections.forEach((section, index) => {
-        const checkbox = section.querySelector('.save-section');
-        const checkboxId = storageKeyPrefix + index;
-        const sectionHTML = section.innerHTML;
-        const storageKey = storageKeyPrefix + index;
-
-        checkbox.addEventListener('change', function(){
-            if (checkbox.checked){
-                localStorage.setItem(storageKey, sectionHTML);
-            } else {
-                localStorage.removeItem(storageKey);
-            }
-        });
-        // Load save checkbox values on page load
-        if(localStorage.getItem(storageKey) === sectionHTML){
-            checkbox.checked = true;
-
-        }
-    });
-
+const storageKey = 'savedSections';
+//Loop through the sections
+const sections = document.querySelectorAll('section');
+sections.forEach((section, index) => {
+const checkbox = section.querySelector('.save-section');
+const sectionHTML = section.innerHTML;
+checkbox.addEventListener('change', function(){
+const savedSections = JSON.parse(localStorage.getItem(storageKey)) || [];
+	if( checkbox.checked){
+	savedSections.push({index, sectionHTML});
+	}else {
+	const sectionIndex = savedSections.findIndex(item => item.index === index);
+	if(sectionIndex !== -1){
+	savedSections.splice(sectionIndex, 1);
+	}
+	}
+localStorage.setItem(storageKey, JSON.stringify(savedSections));
+});
+//Load saved checkbox values on page load
+const savedSections = JSON.page(localStorage.getItem(storageKey))|| [];
+const savedSection = savedSections.find(item => item.index === index);
+	if(savedSection && savedSection.sectionHTML === sectionHTML){
+	checkbox.checked = true;
+	}
+});
 </script>  
-
 </body>
 </html>
